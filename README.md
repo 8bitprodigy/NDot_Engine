@@ -3,7 +3,7 @@
 NDot Engine
 ===========
 
-The NDot Engine is a new/modern game engine designed for use with the N64, and hopefully be portable to PC/Linux, and other low-spec systems.
+The NDot Engine(Pronounced like the "endo" part of "Nintendo") is a new/modern game engine designed for use with the N64, and hopefully be portable to PC/Linux, and other low-spec systems.
 
 While it currently uses libdragon, but may switch over to the SDL2_N64 project to aid in portability.
 
