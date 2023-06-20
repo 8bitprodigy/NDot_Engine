@@ -1,0 +1,13 @@
+
+.vscode/**
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/c_cpp_properties.json
+
+build/
+build.log
+
+*.o
+*.d
+
+/SDL2_*n64.a
