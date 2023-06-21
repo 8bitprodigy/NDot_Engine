@@ -3,13 +3,15 @@
 NDot Engine
 ===========
 
-The NDot Engine(Pronounced like the "endo" part of "Nintendo") is a new/modern game engine designed for use with the N64, and hopefully be portable to PC/Linux, and other low-spec systems.
+---
 
-While it currently uses libdragon, but may switch over to the SDL2_N64 project to aid in portability.
+The NDot Engine(Pronounced like the "endo" part of "Nintendo") is a new/modern game engine, heavily inspired by the [Godot Engine](https://godotengine.org/) designed for use with the N64, and hopefully be portable to PC/Linux, and other low-spec systems.
 
-It aims to be easy to use and make games with, taking heavy inspiration from the Godot Engine's node system where rather than an Entity Component System, the nodes themselves have their behaviors built in.
+While it currently uses [libdragon](https://github.com/DragonMinded/libdragon), it may switch over to the [SDL2_N64](https://github.com/stefanmielke/sdl_n64_libdragon/tree/libdragon_unstable) project to aid in portability.
 
-Currently, it is in its very early stages, but we intend to take full advantage of the N64's 3D capabilities, as well as support 2D scenes.
+It aims to be easy to make games with, taking heavy inspiration from the Godot Engine's node system where, rather than an Entity Component System, the nodes themselves have their behaviors built in.
+
+Currently, it is in its very early stages, but we intend to take full advantage of the N64's 3D capabilities, as well as support 2D scenes later on.
 
 When it is complete, it should have the following features:
 
