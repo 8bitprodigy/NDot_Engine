@@ -80,3 +80,14 @@ Most of these will be exposed through nodes, placing a priority on implementing 
 	_enter_tree()
 	_exit_tree()
 
+Each node can have N number of children by way of a linked list, as each node has a pointer to a sibling node.
+
+	Tree Structure:
+
+					root node(3 children)
+							\
+						child node(2 children)
+						/		  \
+			sibling node(1 child)	child node(1 child)
+			/			\		   /		  \
+	 sibling node|child node|sibling node|child node
