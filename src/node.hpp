@@ -76,7 +76,7 @@ class node{
 
 
 		// Constructor/Destructor
-		node( char new_name[SCENE_ITEM_NAME_MAX_SIZE] );
+		node();
 		virtual ~node();
 
 };

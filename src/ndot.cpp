@@ -7,22 +7,30 @@ class foo_node: public node {
 	public:
 		void _update(float delta_time){
 			printf("Foo!\t | Delta Time: %2.20f\n", delta_time);
+			printf("\t"); printf(name); printf("\n");
 			if(parent){ printf("\tParent: "); printf(parent->name);printf("\n"); }
 			if(sibling){ printf("\tSibling: "); printf(sibling->name);printf("\n"); }
 			if(child){ printf("\tChild: "); printf(child->name); printf("\n\n");}
 		}
-		foo_node(char new_name[SCENE_ITEM_NAME_MAX_SIZE] ) : node(new_name){}
+		foo_node() : node(){
+			strcpy(name, "Foo");
+			snprintf( name, sizeof(name)+4, "%u", get_ID() );
+		}
 };
 
 class bar_node: public node {
 	public:
 		void _update(float delta_time){
 			printf("Bar!\n");
+			printf("\t"); printf(name); printf("\n");
 			if(parent){ printf("\tParent: "); printf(parent->name);printf("\n"); }
 			if(sibling){ printf("\tSibling: "); printf(sibling->name);printf("\n"); }
 			if(child){ printf("\tChild: "); printf(child->name); printf("\n\n");}
 		}
-		bar_node(char new_name[SCENE_ITEM_NAME_MAX_SIZE] ) : node(new_name){}
+		bar_node() : node(){
+			strcpy(name, "Bar");
+			snprintf( name, sizeof(name)+4, "%u", get_ID() );
+		}
 };
 
 
@@ -30,11 +38,15 @@ class foobar_node: public node {
 	public:
 		void _update(float delta_time){
 			printf("Foo-Bar!\n");
+			printf("\t"); printf(name); printf("\n");
 			if(parent){ printf("\tParent: "); printf(parent->name);printf("\n"); }
 			if(sibling){ printf("\tSibling: "); printf(sibling->name);printf("\n"); }
 			if(child){ printf("\tChild: "); printf(child->name); printf("\n\n");}
 		}
-		foobar_node(char new_name[SCENE_ITEM_NAME_MAX_SIZE] ) : node(new_name){}
+		foobar_node() : node(){
+			strcpy(name, "FooBar");
+			snprintf( name, sizeof(name)+4, "%u", get_ID() );
+		}
 };
 
 
@@ -77,14 +89,14 @@ class N {
 
 // To be moved to a main.cpp file later
 int main(void) {
-	char r[] = "root";
-	char f[]="foo";
-	char b[]="bar";
-	char fb[]="foobar";
-	node *root = new node(r);
-	foo_node *foo = new foo_node(f);
-	bar_node *bar = new bar_node(b);
-	foobar_node *foobar = new foobar_node(fb);
+	//char r[] = "root";
+	//char f[]="foo";
+	//char b[]="bar";
+	//char fb[]="foobar";
+	node *root = new node();
+	foo_node *foo = new foo_node();
+	bar_node *bar = new bar_node();
+	foobar_node *foobar = new foobar_node();
 	
 	root->add_child(bar);
 	root->add_child(foo);

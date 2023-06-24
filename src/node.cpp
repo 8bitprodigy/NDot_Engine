@@ -66,6 +66,33 @@ void node::add_child( node* new_child ){
 	new_child->enter_tree();
 }
 
+/*
+// So loading is a static function which doesn't take any instance yet and creates one
+node* node::load(FILE* pFile) { 
+    // need to read in a name before we can create a node
+    char name[256];
+    fscanf(pFile, "%s", name);
+    Node* pNode = new Node(name);
+    
+    // now read in other shit a node has
+    int x, y;
+    fscanf(pFile, "%d%d", &x, &y);
+    pNode->setPos(x, y);
+
+    // now read in # of children
+    unsigned nodeCount = 0;
+    fscanf(pFile, "%u", &nodeCount);
+
+    for(unsigned n = 0; n < nodeCount; ++n) {
+        // create a new node for every child, 
+        // and add it to this node
+        pNode->addChild(Node::load(pFile)); 
+    }
+
+    // return our new node
+    return pNode;
+}*/
+
 // Pop node from tree and link siblings together
 node* node::pop(){
 	if( sibling ){
@@ -192,7 +219,7 @@ void node::set_name( const char new_name[SCENE_ITEM_NAME_MAX_SIZE] ){
 // Constructor/Destructor
 //------------------------
 
-node::node( char new_name[SCENE_ITEM_NAME_MAX_SIZE] ){
+node::node(){
 	ID = incrementor++;
 	active = true;
 	child = NULL;
@@ -200,8 +227,10 @@ node::node( char new_name[SCENE_ITEM_NAME_MAX_SIZE] ){
 	prev_sibling = NULL;
 	parent = NULL;
 	next = NULL;
+	//strcpy(name,typeid(this).name());
+	//printf(typeid(this).name());
 	snprintf( name, sizeof(name), "%u", get_ID() );
-	set_name(new_name);
+	//set_name(new_name);
 	if( last ) last->next = this;
 	last = this;
 }

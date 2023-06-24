@@ -1,2 +1,12 @@
 
 .vscode/c_cpp_properties.json
+src/build/node.o
+src/build/ndot.d
+src/build/ndot.elf
+src/build/ndot.elf.bin
+src/build/ndot.elf.msym
+src/build/ndot.elf.sym
+src/build/ndot.map
+src/build/ndot.o
+src/build/node.d
+src/ndot.z64
