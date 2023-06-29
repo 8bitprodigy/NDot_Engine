@@ -4,38 +4,53 @@
 
 
 
-unsigned int node::incrementor = 0;
-node *node::last = NULL;
+unsigned int Node::incrementor = 0;
+Node *Node::last = NULL;
 //----------------------
 //        NODE
 //----------------------
 // The Node type that will populate the SceneTree.
 
 
+// Factory Management
+//--------------------
+
+Node & Node::get(){
+	static Node instance;
+	return instance;
+}
+
+bool Node::register_node( 
+		const char* type_name, 
+		const Node_Generator & generator_function
+	){
+	return available_nodes.insert(std::make_pair(type_name, generator_function)).second;
+}
+
 // SceneTree events
 //------------------
 
 // called when the node and all its subtree are built
-void node::ready(){
+void Node::ready(){
 	if( child ) 		child->ready();
 	if( sibling )		sibling->ready();
 	_ready();
 }
 // called once every game tick
-void node::update( float delta_time ){
+void Node::update( float delta_time ){
 	_update( delta_time );
 	if( !get_active() )	return;
 	if( child )			child->update( delta_time );
 	if( sibling )		sibling->update( delta_time );
 }
 // called when the node is added into the tree
-void node::enter_tree(){
+void Node::enter_tree(){
 	_enter_tree();
 	if( child )			child->enter_tree();
 	if( sibling )		sibling->enter_tree();
 }
 // called when the node is removed from the tree
-void node::exit_tree(){
+void Node::exit_tree(){
 	_exit_tree();
 	if( child )			child->exit_tree();
 	if( sibling )		sibling->exit_tree();
@@ -46,10 +61,11 @@ void node::exit_tree(){
 //----------------
 
 // Add child node to the top of the child list.
-void node::add_child( node* new_child ){
+void Node::add_child( Node* new_child ){
 	if( new_child->parent ) return;
 	if( child ){
-		node *temp_child	= child;
+		if(get_child_by_name(new_child->name)) snprintf( new_child->name, sizeof(new_child->name), "%u", new_child->get_ID() );
+		Node *temp_child	= child;
 		new_child->sibling	= temp_child;
 		temp_child->prev_sibling = new_child;
 		/*char end_chars[SCENE_ITEM_NAME_MAX_NUMS] = new_child->name[strlen(new_child->name)-SCENE_ITEM_NAME_MAX_NUMS];
@@ -94,7 +110,7 @@ node* node::load(FILE* pFile) {
 }*/
 
 // Pop node from tree and link siblings together
-node* node::pop(){
+Node* Node::pop(){
 	if( sibling ){
 		if( prev_sibling ){
 			prev_sibling->sibling		= sibling;
@@ -107,35 +123,35 @@ node* node::pop(){
 }
 
 // Helper Functions
-node* node::pop_child_by_name( char child_name[SCENE_ITEM_NAME_MAX_SIZE] ){
+Node* Node::pop_child_by_name( char child_name[SCENE_ITEM_NAME_MAX_SIZE] ){
 	if( !child ) return NULL;
 	return get_child_by_name( child_name )->pop();
 }
-void node::delete_child_by_name( char child_name[SCENE_ITEM_NAME_MAX_SIZE] ){
+void Node::delete_child_by_name( char child_name[SCENE_ITEM_NAME_MAX_SIZE] ){
 	if( !child ) return;
 	delete pop_child_by_name( child_name );
 }
-node* node::pop_child_by_index( unsigned int index, bool return_last_if_index_OOB ){
+Node* Node::pop_child_by_index( unsigned int index, bool return_last_if_index_OOB ){
 	if( !child ) return NULL;
 	return get_child_by_index( index, return_last_if_index_OOB )->pop();
 }
-void node::delete_child_by_index( unsigned int index, bool return_last_if_index_OOB ){
+void Node::delete_child_by_index( unsigned int index, bool return_last_if_index_OOB ){
 	if( !child ) return;
-	delete pop_child_by_index( index,return_last_if_index_OOB );
+	delete pop_child_by_index( index, return_last_if_index_OOB );
 }
-node* node::pop_child_by_ID( unsigned int check_ID ){
+Node* Node::pop_child_by_ID( unsigned int check_ID ){
 	if( !child ) return NULL;
 	return get_child_by_ID( check_ID )->pop();
 }
-void node::delete_child_by_ID( unsigned int check_ID ){
+void Node::delete_child_by_ID( unsigned int check_ID ){
 	if( !child ) return;
 	delete pop_child_by_ID( check_ID );
 }
 
 // Removes nodes that don't have a parent and thus aren't in the tree
-void node::delete_floating_nodes(){
+void Node::delete_floating_nodes(){
 	if( !next ) return;
-	node *temp_node_ptr = next;
+	Node *temp_node_ptr = next;
 	if( temp_node_ptr->parent ){
 		next->delete_floating_nodes();
 		return;
@@ -153,33 +169,33 @@ void node::delete_floating_nodes(){
 // Node Getters
 //--------------
 
-bool node::get_active(){
+bool Node::get_active(){
 	return active;
 }
-void node::set_active( bool active_ ){
+void Node::set_active( bool active_ ){
 	active = active_;
 }
-unsigned int node::get_ID(){
+unsigned int Node::get_ID(){
 	return ID;
 }
-node* node::get_parent(){
+Node* Node::get_parent(){
 	return parent;
 }
-node* node::get_child_by_name( char child_name[SCENE_ITEM_NAME_MAX_SIZE] ){
+Node* Node::get_child_by_name( char child_name[SCENE_ITEM_NAME_MAX_SIZE] ){
 	if( !child ) return NULL;
 	if( child->name == child_name ) return child;
 	return child->get_sibling_by_name( child_name );
 }
-node* node::get_sibling_by_name( char sibling_name[SCENE_ITEM_NAME_MAX_SIZE] ){
+Node* Node::get_sibling_by_name( char sibling_name[SCENE_ITEM_NAME_MAX_SIZE] ){
 	if( !sibling ) return NULL;
 	if( sibling->name == sibling_name ) return sibling;
 	return sibling->get_sibling_by_name( sibling_name );
 }
-node* node::get_child_by_index(unsigned int index, bool return_last_if_index_OOB ){
+Node* Node::get_child_by_index(unsigned int index, bool return_last_if_index_OOB ){
 	if( !child ) return NULL;
 	return child->get_sibling_by_index( index--, return_last_if_index_OOB );
 }
-node* node::get_sibling_by_index(unsigned int index, bool return_last_if_index_OOB ){
+Node* Node::get_sibling_by_index(unsigned int index, bool return_last_if_index_OOB ){
 	if( index == 0 ) return this;
 	if( sibling ){
 		return sibling->get_sibling_by_index( index--, return_last_if_index_OOB );
@@ -189,21 +205,21 @@ node* node::get_sibling_by_index(unsigned int index, bool return_last_if_index_O
 		return NULL;
 	}
 }
-node* node::get_child_by_ID( unsigned int check_ID ){
+Node* Node::get_child_by_ID( unsigned int check_ID ){
 	if( !child ) return NULL;
 	if( child->get_ID() == check_ID ) return child;
 	return child->get_sibling_by_ID( check_ID );
 }
-node* node::get_sibling_by_ID( unsigned int check_ID ){
+Node* Node::get_sibling_by_ID( unsigned int check_ID ){
 	if( get_ID() == check_ID ) return this;
 	if( sibling ) return sibling->get_sibling_by_ID( check_ID );
 	return NULL;
 }
-node* node::get_last_sibling(){
+Node* Node::get_last_sibling(){
 	if( !sibling ) return this;
 	return sibling->get_last_sibling();
 }
-node* node::get_last_node(){
+Node* Node::get_last_node(){
 	if( !next ){ return this;};
 	return next->get_last_node();
 }
@@ -212,14 +228,14 @@ node* node::get_last_node(){
 // Node Setters
 //--------------
 
-void node::set_name( const char new_name[SCENE_ITEM_NAME_MAX_SIZE] ){
+void Node::set_name( const char new_name[SCENE_ITEM_NAME_MAX_SIZE] ){
 	strcpy( name, new_name );
 }
 
 // Constructor/Destructor
 //------------------------
 
-node::node(){
+Node::Node(){
 	ID = incrementor++;
 	active = true;
 	child = NULL;
@@ -227,30 +243,14 @@ node::node(){
 	prev_sibling = NULL;
 	parent = NULL;
 	next = NULL;
-	//strcpy(name,typeid(this).name());
+	strcpy(name,"Node");
 	//printf(typeid(this).name());
-	snprintf( name, sizeof(name), "%u", get_ID() );
+	//snprintf( name, sizeof(name), "%u", get_ID() );
 	//set_name(new_name);
 	if( last ) last->next = this;
 	last = this;
 }
-node::~node(){
+Node::~Node(){
 	if( child ) delete child;
 	if( sibling ) delete sibling;
 }
-
-/*
-// Variables
-char node::name[SCENE_ITEM_NAME_MAX_SIZE];
-
-// LINKED LIST POINTERS
-node 		*node::child;    // points to the first node child-ed to this
-node 		*node::sibling;  // allows for multiple children to a single node
-node 		*node::prev_sibling;
-node 		*node::parent;   // for quick access when needing to move up the tree
-node 		*node::next;	// points to the next node to be created for deconstructing everything so as not to lose a node somewhere in RAM
-static node *node::last;
-
-unsigned int 		node::ID;
-bool 				node::active;
-static unsigned int node::incrementor;*/

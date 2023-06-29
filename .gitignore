@@ -10,3 +10,4 @@ src/build/ndot.map
 src/build/ndot.o
 src/build/node.d
 src/ndot.z64
+.vscode/settings.json

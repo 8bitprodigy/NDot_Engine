@@ -3,7 +3,7 @@
 #include <cstdio>
 
 
-class foo_node: public node {
+class foo_node: public Node {
 	public:
 		void _update(float delta_time){
 			printf("Foo!\t | Delta Time: %2.20f\n", delta_time);
@@ -12,13 +12,13 @@ class foo_node: public node {
 			if(sibling){ printf("\tSibling: "); printf(sibling->name);printf("\n"); }
 			if(child){ printf("\tChild: "); printf(child->name); printf("\n\n");}
 		}
-		foo_node() : node(){
+		foo_node() : Node(){
 			strcpy(name, "Foo");
-			snprintf( name, sizeof(name)+4, "%u", get_ID() );
+			//snprintf( name, sizeof(name)+4, "%u", get_ID() );
 		}
 };
 
-class bar_node: public node {
+class bar_node: public Node {
 	public:
 		void _update(float delta_time){
 			printf("Bar!\n");
@@ -27,14 +27,14 @@ class bar_node: public node {
 			if(sibling){ printf("\tSibling: "); printf(sibling->name);printf("\n"); }
 			if(child){ printf("\tChild: "); printf(child->name); printf("\n\n");}
 		}
-		bar_node() : node(){
+		bar_node() : Node(){
 			strcpy(name, "Bar");
-			snprintf( name, sizeof(name)+4, "%u", get_ID() );
+			//snprintf( name, sizeof(name)+4, "%u", get_ID() );
 		}
 };
 
 
-class foobar_node: public node {
+class foobar_node: public Node {
 	public:
 		void _update(float delta_time){
 			printf("Foo-Bar!\n");
@@ -43,16 +43,16 @@ class foobar_node: public node {
 			if(sibling){ printf("\tSibling: "); printf(sibling->name);printf("\n"); }
 			if(child){ printf("\tChild: "); printf(child->name); printf("\n\n");}
 		}
-		foobar_node() : node(){
+		foobar_node() : Node(){
 			strcpy(name, "FooBar");
-			snprintf( name, sizeof(name)+4, "%u", get_ID() );
+			//snprintf( name, sizeof(name)+4, "%u", get_ID() );
 		}
 };
 
 
 class N {
 	public:
-		node *scene_root;
+		Node *scene_root;
 
 		void init(){
 			console_init();
@@ -89,14 +89,13 @@ class N {
 
 // To be moved to a main.cpp file later
 int main(void) {
-	//char r[] = "root";
-	//char f[]="foo";
-	//char b[]="bar";
-	//char fb[]="foobar";
-	node *root = new node();
+	
+	Node *root = new Node();
 	foo_node *foo = new foo_node();
 	bar_node *bar = new bar_node();
 	foobar_node *foobar = new foobar_node();
+
+	foobar = dynamic_cast<foobar_node*>(foobar);
 	
 	root->add_child(bar);
 	root->add_child(foo);
